@@ -10,7 +10,7 @@ This repo is a workspace for authoring Claude Code slash-command skills, specifi
 
 ## Skill authoring conventions
 
-Each skill lives under `skills/<name>/` as a directory containing at minimum a `SKILL.md`. The YAML frontmatter of `SKILL.md` must declare:
+Each skill lives under `skills/<bucket>/<name>/` (e.g. `skills/engineering/spec/`) as a directory containing at minimum a `SKILL.md`. Buckets group skills by domain (`engineering/`, future: `productivity/`, `misc/`, etc.). The YAML frontmatter of `SKILL.md` must declare:
 
 ```yaml
 ---
@@ -21,7 +21,7 @@ argument-hint: [hint]
 ---
 ```
 
-Use `allowed-tools` in frontmatter to restrict what Bash commands a skill may run (see `skills/spec-impl/SKILL.md` for an example that limits to read-only git/fs).
+Use `allowed-tools` in frontmatter to restrict what Bash commands a skill may run (see `skills/engineering/spec-impl/SKILL.md` for an example that limits to read-only git/fs).
 
 Use `!`command`` shell snippets inside `SKILL.md` to inject live repo state at skill-load time (e.g., current branch, available specs). Embed them at the top of the skill body before the instructions.
 
@@ -52,6 +52,15 @@ Accepts `<NN-slug>` as argument. Phases:
 4. Implement the spec's plan step-by-step, pausing after each step for diff review.
 
 At completion, remind the user to verify acceptance criteria and mark the spec `Implementado` manually before merging.
+
+## Distribution
+
+The repo is consumed by users in two ways:
+
+1. **skills.sh** (`npx skills@latest add Klerith/fernando-skills`) — auto-discovers public GitHub repos with `skills/**/SKILL.md`. Just push to GitHub.
+2. **Multi-agent installer** (`scripts/install-to-agent.sh <agent>`) — translates skills for Cursor (`.cursor/rules/*.mdc`), Codex (`AGENTS.md` block + `.codex/skills/`), and Antigravity (`.antigravity/skills/`). Run from the *target* repo, not this one.
+
+`scripts/link-skills.sh` symlinks every skill into `~/.claude/skills` for local development.
 
 ## No build or test commands
 

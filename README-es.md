@@ -194,20 +194,36 @@ Esa separación es lo que evita el scope creep silencioso.
 
 ## Instalación
 
-### Opción 1 — Personal (todos tus proyectos)
+### Opción 1 — skills.sh (recomendado, Claude Code)
 
 ```bash
-mkdir -p ~/.claude/skills
-cp -r skills/spec ~/.claude/skills/
-cp -r skills/spec-impl ~/.claude/skills/
+npx skills@latest add Klerith/fernando-skills
 ```
 
-### Opción 2 — De proyecto (versionado en git)
+Asegúrate de seleccionar `/setup-fernando-skills` y ejecútalo dentro de tu proyecto para configurar la ubicación de `specs/` y el idioma.
+
+### Opción 2 — Otros agentes (Cursor, Codex, Antigravity)
 
 ```bash
+git clone https://github.com/Klerith/fernando-skills ~/.fernando-skills
+cd ~/tu-proyecto
+~/.fernando-skills/scripts/install-to-agent.sh <agent>
+```
+
+`<agent>` puede ser `claude`, `cursor`, `codex` o `antigravity`. Ver [README.md](./README.md#install-in-other-agents) para detalles.
+
+### Opción 3 — Manual
+
+```bash
+# Personal (todos tus proyectos)
+mkdir -p ~/.claude/skills
+cp -r skills/engineering/spec ~/.claude/skills/
+cp -r skills/engineering/spec-impl ~/.claude/skills/
+
+# O de proyecto (versionado en git)
 mkdir -p .claude/skills
-cp -r skills/spec .claude/skills/
-cp -r skills/spec-impl .claude/skills/
+cp -r skills/engineering/spec .claude/skills/
+cp -r skills/engineering/spec-impl .claude/skills/
 ```
 
 Para que el método funcione, también necesitas crear la carpeta `specs/` en la raíz del proyecto:
