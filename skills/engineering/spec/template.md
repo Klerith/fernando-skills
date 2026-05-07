@@ -11,11 +11,13 @@ Every spec starts with metadata in a blockquote format:
 ```markdown
 # SPEC NN — Short, descriptive title
 
-> **Estado:** Borrador · **Depende de:** SPEC 01, SPEC 02 · **Fecha:** YYYY-MM-DD
-> **Objetivo:** A single sentence. If you need two sentences, the feature is too big.
+> **Status:** Draft · **Depends on:** SPEC 01, SPEC 02 · **Date:** YYYY-MM-DD
+> **Objective:** A single sentence. If you need two sentences, the feature is too big.
 ```
 
-**Valid states:** `Borrador`, `En revisión`, `Aprobado`, `Implementado`, `Obsoleto`.
+**Valid states:** `Draft`, `In review`, `Approved`, `Implemented`, `Obsolete`.
+
+> The labels above are the English defaults. The skills also accept equivalents in any language (e.g. Spanish `Borrador` / `En revisión` / `Aprobado` / `Implementado` / `Obsoleto`). Pick one set per repo and stay consistent.
 
 **Objective rule:** one sentence that a human reads in 5 seconds and understands what is going to be built. If it doesn't fit in one sentence, split the feature.
 
@@ -34,14 +36,14 @@ For simple specs, omit it.
 Two explicit sub-blocks. **Both are mandatory.**
 
 ```markdown
-## Alcance
+## Scope
 
-**Dentro:**
+**In:**
 
 - Concrete thing one.
 - Concrete thing two.
 
-**Fuera de alcance (para specs futuros):**
+**Out of scope (for future specs):**
 
 - Something that could be done but not now.
 - Something that came up in the conversation but is not in.
@@ -56,7 +58,7 @@ Two explicit sub-blocks. **Both are mandatory.**
 The concrete structures that appear or change. Use real code, not abstract pseudocode.
 
 ```markdown
-## Modelo de datos
+## Data model
 
 \`\`\`js
 // Game state
@@ -82,7 +84,7 @@ If the feature introduces no new data, write it explicitly: *"This feature intro
 Numbered steps. Each step must leave the system in a **functional and runnable** state. No "implement half and continue tomorrow".
 
 ```markdown
-## Plan de implementación
+## Implementation plan
 
 1. Create file X with an empty skeleton.
 2. Implement function A in X. Manual test: run Y, see Z.
@@ -103,7 +105,7 @@ Numbered steps. Each step must leave the system in a **functional and runnable**
 Boolean checklist. Each item can be verified with yes or no.
 
 ```markdown
-## Criterios de aceptación
+## Acceptance criteria
 
 - [ ] The game loads without errors in the console.
 - [ ] Breaking a brick adds exactly 10 points.
@@ -124,7 +126,7 @@ Boolean checklist. Each item can be verified with yes or no.
 The section that has the most value 3 months from now. Capture **what you considered**, not just what you chose.
 
 ```markdown
-## Decisiones
+## Decisions
 
 - **Yes:** localStorage for persistence. Fits in <5MB and we don't need queries.
 - **No:** IndexedDB. Overengineering for this case.
@@ -141,7 +143,7 @@ Each decision ideally has a brief reason. Decisions without a reason are the fir
 Only when there are non-obvious risks. Simple table:
 
 ```markdown
-## Riesgos
+## Risks
 
 | Risk | Mitigation |
 |------|------------|

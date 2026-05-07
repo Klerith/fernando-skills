@@ -65,11 +65,13 @@ This repo is configured for Fernando Herrera's spec-driven skills (`/spec`, `/sp
 - **response language:** auto
 - **branch prefix:** `spec-`
 
-State machine for `**Estado:**` in `specs/NN-slug.md`:
-`Borrador` → `En revisión` → `Aprobado` → `Implementado` (or `Obsoleto`).
-Claude must never change `**Estado:**` automatically; transitions are human-driven.
+State machine for the status header in `specs/NN-slug.md`
+(default English; equivalents in any language are accepted):
+`Draft` → `In review` → `Approved` → `Implemented` (or `Obsolete`).
+Claude must never change the status automatically; transitions are human-driven.
 
-`/spec-impl <NN-slug>` only runs when the spec's `**Estado:**` is exactly `Aprobado`.
+`/spec-impl <NN-slug>` only runs when the spec's status means **Approved**
+(`Approved`, `Aprobado`, or the equivalent in the language your team uses).
 ```
 
 If a `## Fernando skills` block already exists, replace its contents in place — do not duplicate.
@@ -80,4 +82,4 @@ Tell the user:
 
 - Which file you wrote to
 - Which values are now configured
-- That they can run `/spec <topic>` to start a new spec, and `/spec-impl <NN-slug>` once a spec reaches `Aprobado`
+- That they can run `/spec <topic>` to start a new spec, and `/spec-impl <NN-slug>` once a spec reaches `Approved`

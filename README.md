@@ -6,7 +6,7 @@
 
 A small, opinionated set of agent skills by [Fernando Herrera](https://github.com/Klerith) for **spec-driven development**: design the spec carefully, then let the agent implement it section by section.
 
-The skills are written in Spanish but reply in whatever language the user prompts in. They work in **Claude Code**, **Cursor**, **OpenAI Codex**, and **Antigravity**.
+The skills are written in English but reply in whatever language the user prompts in. They work in **Claude Code**, **Cursor**, **OpenAI Codex**, and **Antigravity**.
 
 ## Skills
 
@@ -53,19 +53,21 @@ cd ~/your-project
 /setup-fernando-skills    once per repo
         │
         ▼
-/spec <topic>            design — produces specs/NN-slug.md (Estado: Borrador)
+/spec <topic>            design — produces specs/NN-slug.md (Status: Draft)
         │
         ▼
-human review             you mark Estado: Aprobado manually
+human review             you mark Status: Approved manually
         │
         ▼
 /spec-impl <NN-slug>     implement — branch spec-NN-slug, step by step
         │
         ▼
-human review             you mark Estado: Implementado manually
+human review             you mark Status: Implemented manually
 ```
 
-The state of a spec (`Borrador` → `En revisión` → `Aprobado` → `Implementado` / `Obsoleto`) is **never** changed by the agent. Transitions are human-driven; that is the whole point.
+The state of a spec (`Draft` → `In review` → `Approved` → `Implemented` / `Obsolete`) is **never** changed by the agent. Transitions are human-driven; that is the whole point.
+
+> Status labels are language-agnostic. `/spec-impl` only requires the status to mean **Approved** — `Approved`, `Aprobado`, or the equivalent in any language all work. Same goes for the other states. Pick the labels your team prefers and stay consistent.
 
 ## Why these skills
 

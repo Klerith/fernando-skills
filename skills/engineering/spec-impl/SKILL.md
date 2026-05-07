@@ -1,6 +1,6 @@
 ---
 name: spec-impl
-description: Implements an approved spec. Validates that the state is "Aprobado", creates a git branch named after the spec, switches to it, and starts the implementation step by step with pauses to review diffs.
+description: Implements an approved spec. Validates that the state means "Approved" (in any language), creates a git branch named after the spec, switches to it, and starts the implementation step by step with pauses to review diffs.
 disable-model-invocation: true
 argument-hint: <NN-spec-name>
 allowed-tools: Bash(git status:*), Bash(git branch:*), Bash(git checkout:*), Bash(cat:*), Bash(ls:*)
@@ -48,30 +48,46 @@ If `$ARGUMENTS` has a value:
 Read the file of the spec you found:
 !`cat specs/$ARGUMENTS.md 2>/dev/null || echo "FILE_NOT_FOUND"`
 
-In the file's contents, look for the line that contains `**Estado:**`.
+In the file's contents, look for the line that contains the spec's state. The header label is typically `**Status:**` (English) or `**Estado:**` (Spanish), but it may use any language. Match by position (status line near the top of the spec) and by the surrounding state machine, not by the exact label.
 
-**Absolute rule:** You can only continue if the state is exactly `Aprobado`.
+**Absolute rule:** You can only continue if the state **means "Approved"** — regardless of the language used.
 
-| State found | Action |
-|---|---|
-| `Aprobado` | Continue to Phase 3. |
-| `Borrador` | Stop. Show the error message below. |
-| `En revisión` | Stop. Show the error message below. |
-| `Implementado` | Stop. Show the error message below. |
-| `Obsoleto` | Stop. Show the error message below. |
-| The state line cannot be found | Stop. The file does not follow the expected format. Tell this to the user. |
+Treat any of the following (and their equivalents in other languages) as the **Approved** state and continue:
 
-**Standard error message when the state is not Aprobado:**
+- English: `Approved`
+- Spanish: `Aprobado`
+- Portuguese: `Aprovado`
+- French: `Approuvé`
+- German: `Genehmigt`
+- Italian: `Approvato`
+- …or any other language's word that clearly means "approved"
+
+Anything else (Draft / Borrador, In review / En revisión, Implemented / Implementado, Obsolete / Obsoleto, or any unrecognized value) means **stop** and show the error message below.
+
+| State category | Examples (any language) | Action |
+|---|---|---|
+| Approved | `Approved`, `Aprobado`, `Aprovado`, `Approuvé`, … | Continue to Phase 3. |
+| Draft | `Draft`, `Borrador`, … | Stop. Show the error message below. |
+| In review | `In review`, `En revisión`, … | Stop. Show the error message below. |
+| Implemented | `Implemented`, `Implementado`, … | Stop. Show the error message below. |
+| Obsolete | `Obsolete`, `Obsoleto`, … | Stop. Show the error message below. |
+| State line not found / unrecognized value | — | Stop. The file does not follow the expected format. Tell this to the user. |
+
+If you are unsure whether a value means "approved", **do not assume**. Stop and ask the user to clarify or to update the spec to the canonical wording.
+
+**Standard error message when the state does not mean Approved:**
 
 ```
 ❌ I cannot implement this spec.
 
 Current state: [STATE FOUND]
-I only work with specs in "Aprobado" state.
+I only work with specs whose state means "Approved" (e.g. `Approved`, `Aprobado`,
+or the equivalent in another language).
 
 To continue you have two options:
   1. If the spec is ready to be implemented, open it and change the state
-     to "Aprobado" manually. That change is made by the human, not Claude.
+     to "Approved" (or the equivalent term your team uses) manually.
+     That change is made by the human, not the agent.
   2. If the spec still needs work, use /spec [name] to resume it.
 ```
 
@@ -81,7 +97,7 @@ Do not offer alternatives, do not suggest "I can still start if you want". The b
 
 ### Phase 3 — Create the git branch and switch to it
 
-Once you have confirmed the state is `Aprobado`:
+Once you have confirmed the state means `Approved`:
 
 1. Derive the branch name from the spec file's full name, without the extension. Format: `spec-NN-slug`. Examples:
    - `01-mvp-arkanoid.md` → branch `spec-01-mvp-arkanoid`
@@ -98,14 +114,16 @@ Once you have confirmed the state is `Aprobado`:
 
    Spec:   specs/NN-slug.md
    Branch: spec-NN-slug  (active)
-   State:  Aprobado
+   State:  Approved   (← echo back the actual value found in the spec)
    ```
 
 4. **Do not start implementing yet.** First show the spec summary to the user so they have it fresh. Extract and show:
-   - The **objective** (the line after `**Objetivo:**`).
-   - The **scope** (the full `## Alcance` section).
-   - The **implementation plan** (the section with the numbered steps).
-   - The **acceptance criteria** (the checklist).
+   - The **objective** (the line after `**Objective:**` / `**Objetivo:**` / equivalent label).
+   - The **scope** (the `## Scope` / `## Alcance` / equivalent section).
+   - The **implementation plan** (the section with the numbered steps — `## Implementation plan` / `## Plan de implementación` / equivalent).
+   - The **acceptance criteria** (the checklist — `## Acceptance criteria` / `## Criterios de aceptación` / equivalent).
+
+Match section headings by meaning, not by exact wording — the spec may be authored in any language.
 
 ---
 
@@ -149,8 +167,8 @@ Once confirmed, follow these rules during the entire implementation:
 ✅ All steps of the plan are implemented.
 
 Next step: verify the spec's acceptance criteria one by one.
-If they all pass, update the spec's state to "Implementado" and make
-the final commit before merging this branch.
+If they all pass, update the spec's state to "Implemented" (or the equivalent
+in your repo's language) and make the final commit before merging this branch.
 ```
 
 ---
@@ -161,16 +179,16 @@ the final commit before merging this branch.
 /impl-spec 01-mvp-arkanoid
 
   Phase 1  →  Finds specs/01-mvp-arkanoid.md
-  Phase 2  →  Reads the state → "Aprobado" → ✅ continues
+  Phase 2  →  Reads the state → "Approved" (or "Aprobado", etc.) → ✅ continues
   Phase 3  →  git checkout -b spec-01-mvp-arkanoid → git checkout spec-01-mvp-arkanoid
               Shows objective, scope, plan and criteria
   Phase 4  →  Implements step by step with pauses
               Ends by reminding to verify the acceptance criteria
 
-/impl-spec 02-powerups  (state: Borrador)
+/impl-spec 02-powerups  (state: Draft / Borrador)
 
   Phase 1  →  Finds specs/02-powerups.md
-  Phase 2  →  Reads the state → "Borrador" → ❌ stops
+  Phase 2  →  Reads the state → "Draft" → ❌ stops
               Shows the standard error message
               Does not create branch, does not touch code
 ```

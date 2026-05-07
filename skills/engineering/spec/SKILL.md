@@ -98,10 +98,10 @@ When all sections are confirmed:
 2. Generate a short slug from the objective (e.g. `levels-and-highscores`).
 3. Ask the user whether the proposed file name works for them before writing it.
 4. Create the file at `specs/NN-slug.md` with all approved sections.
-5. Mark the state as `Borrador` (Draft) by default. **Do not mark it as `Aprobado` (Approved) automatically** — the user does that once they have re-read it.
+5. Mark the state as `Draft` by default. **Do not mark it as `Approved` automatically** — the user does that once they have re-read it.
 6. Confirm to the user:
    - Path of the created file.
-   - Reminder: the spec is in `Borrador` state. Change it to `Aprobado` once you have re-read it.
+   - Reminder: the spec is in `Draft` state. Change it to `Approved` once you have re-read it.
    - Suggestion for the next step: leave the spec command and start the implementation with a prompt like _"Implement spec NN step by step, pausing after each step of the implementation plan so I can review the diff."_
 
 ## Hard rules
