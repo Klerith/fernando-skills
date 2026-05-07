@@ -6,7 +6,7 @@ This file is the reference the `/spec` skill consults when generating specs. Eac
 
 ## Header
 
-Every spec starts with metadata in a blockquote format:
+Every spec starts with metadata in a blockquote (no tables, no blocks, simple as shown below) format:
 
 ```markdown
 # SPEC NN — Short, descriptive title
@@ -63,9 +63,9 @@ The concrete structures that appear or change. Use real code, not abstract pseud
 \`\`\`js
 // Game state
 const state = {
-  level: 1,
-  score: 0,
-  highScores: [/* { score, level, date } */],
+level: 1,
+score: 0,
+highScores: [/* { score, level, date } */],
 };
 \`\`\`
 
@@ -75,7 +75,7 @@ Conventions:
 - Velocities in pixels/frame.
 ```
 
-If the feature introduces no new data, write it explicitly: *"This feature introduces no new data structures. It reuses the model from SPEC 01."*
+If the feature introduces no new data, write it explicitly: _"This feature introduces no new data structures. It reuses the model from SPEC 01."_
 
 ---
 
@@ -145,10 +145,10 @@ Only when there are non-obvious risks. Simple table:
 ```markdown
 ## Risks
 
-| Risk | Mitigation |
-|------|------------|
+| Risk                                  | Mitigation                                                                  |
+| ------------------------------------- | --------------------------------------------------------------------------- |
 | localStorage disabled in private mode | Fallback to in-memory object. The game still runs, it just doesn't persist. |
-| Future incompatible schema | Key includes `:v1`. Migration documented in `persistence.js`. |
+| Future incompatible schema            | Key includes `:v1`. Migration documented in `persistence.js`.               |
 ```
 
 For small specs or very contained features, omit it.
