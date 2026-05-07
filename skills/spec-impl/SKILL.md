@@ -1,176 +1,176 @@
 ---
 name: spec-impl
-description: Implementa un spec aprobado. Valida que el estado sea "Aprobado", crea una rama git con el nombre del spec, se mueve a ella, y arranca la implementación paso a paso con pausas para revisar diffs.
+description: Implements an approved spec. Validates that the state is "Aprobado", creates a git branch named after the spec, switches to it, and starts the implementation step by step with pauses to review diffs.
 disable-model-invocation: true
-argument-hint: <NN-nombre-del-spec>
+argument-hint: <NN-spec-name>
 allowed-tools: Bash(git status:*), Bash(git branch:*), Bash(git checkout:*), Bash(cat:*), Bash(ls:*)
 ---
 
-# /spec-impl — Implementador de specs aprobados
+# /spec-impl — Implementer of approved specs
 
-## Contexto de la sesión
+## Session context
 
-Estado del repositorio actual:
+Current repository state:
 !`git status --short`
 
-Rama actual:
+Current branch:
 !`git branch --show-current`
 
-Specs disponibles en esta carpeta:
-!`ls specs/ 2>/dev/null || echo "No existe la carpeta specs/"`
+Specs available in this folder:
+!`ls specs/ 2>/dev/null || echo "The specs/ folder does not exist"`
 
 ---
 
-## Instrucciones
+## Instructions
 
-Sigue estas cuatro fases en orden estricto. **No avances a la siguiente fase si la anterior no se completó correctamente.**
-
----
-
-### Fase 1 — Identificar el spec
-
-El argumento recibido es: `$ARGUMENTS`
-
-Si `$ARGUMENTS` está vacío:
-- Lista los archivos disponibles en `specs/` (ya los tienes arriba).
-- Pide al usuario que especifique el nombre exacto del spec.
-- Detente y espera respuesta. No continúes.
-
-Si `$ARGUMENTS` tiene valor:
-- Busca el archivo en `specs/`. El usuario puede haber escrito el nombre completo (`01-mvp-arkanoid`) o solo el número (`01`) o solo el slug (`mvp-arkanoid`). Intenta encontrar el archivo correcto en cualquiera de esos casos.
-- Si no encuentras el archivo, muestra los specs disponibles y pide al usuario que corrija el nombre.
-- Si lo encuentras, sigue a la Fase 2.
+Follow these four phases in strict order. **Do not advance to the next phase if the previous one did not complete correctly.**
 
 ---
 
-### Fase 2 — Validar el estado del spec
+### Phase 1 — Identify the spec
 
-Lee el archivo del spec encontrado:
-!`cat specs/$ARGUMENTS.md 2>/dev/null || echo "ARCHIVO_NO_ENCONTRADO"`
+The received argument is: `$ARGUMENTS`
 
-Busca en el contenido del archivo la línea que contiene `**Estado:**`.
+If `$ARGUMENTS` is empty:
+- List the files available in `specs/` (you already have them above).
+- Ask the user to specify the exact name of the spec.
+- Stop and wait for an answer. Do not continue.
 
-**Regla absoluta:** Solo puedes continuar si el estado es exactamente `Aprobado`.
+If `$ARGUMENTS` has a value:
+- Look for the file in `specs/`. The user may have written the full name (`01-mvp-arkanoid`), only the number (`01`), or only the slug (`mvp-arkanoid`). Try to find the correct file in any of those cases.
+- If you do not find the file, show the available specs and ask the user to correct the name.
+- If you do find it, continue to Phase 2.
 
-| Estado encontrado | Acción |
+---
+
+### Phase 2 — Validate the spec's state
+
+Read the file of the spec you found:
+!`cat specs/$ARGUMENTS.md 2>/dev/null || echo "FILE_NOT_FOUND"`
+
+In the file's contents, look for the line that contains `**Estado:**`.
+
+**Absolute rule:** You can only continue if the state is exactly `Aprobado`.
+
+| State found | Action |
 |---|---|
-| `Aprobado` | Continúa a Fase 3. |
-| `Borrador` | Para. Muestra el mensaje de error de abajo. |
-| `En revisión` | Para. Muestra el mensaje de error de abajo. |
-| `Implementado` | Para. Muestra el mensaje de error de abajo. |
-| `Obsoleto` | Para. Muestra el mensaje de error de abajo. |
-| No se encuentra la línea de estado | Para. El archivo no sigue el formato esperado. Indica esto al usuario. |
+| `Aprobado` | Continue to Phase 3. |
+| `Borrador` | Stop. Show the error message below. |
+| `En revisión` | Stop. Show the error message below. |
+| `Implementado` | Stop. Show the error message below. |
+| `Obsoleto` | Stop. Show the error message below. |
+| The state line cannot be found | Stop. The file does not follow the expected format. Tell this to the user. |
 
-**Mensaje de error estándar cuando el estado no es Aprobado:**
+**Standard error message when the state is not Aprobado:**
 
 ```
-❌ No puedo implementar este spec.
+❌ I cannot implement this spec.
 
-Estado actual: [ESTADO ENCONTRADO]
-Solo trabajo con specs en estado "Aprobado".
+Current state: [STATE FOUND]
+I only work with specs in "Aprobado" state.
 
-Para continuar tienes dos opciones:
-  1. Si el spec está listo para implementarse, ábrelo y cambia el estado
-     a "Aprobado" manualmente. Ese cambio lo hace el humano, no Claude.
-  2. Si el spec aún necesita trabajo, usa /spec [nombre] para retomarlo.
+To continue you have two options:
+  1. If the spec is ready to be implemented, open it and change the state
+     to "Aprobado" manually. That change is made by the human, not Claude.
+  2. If the spec still needs work, use /spec [name] to resume it.
 ```
 
-No ofrezcas alternativas, no sugiereas "puedo igual empezar si quieres". El bloqueo es intencional.
+Do not offer alternatives, do not suggest "I can still start if you want". The block is intentional.
 
 ---
 
-### Fase 3 — Crear la rama git y moverse a ella
+### Phase 3 — Create the git branch and switch to it
 
-Una vez confirmado que el estado es `Aprobado`:
+Once you have confirmed the state is `Aprobado`:
 
-1. Deriva el nombre de la rama a partir del nombre completo del archivo del spec, sin la extensión. Formato: `spec-NN-slug`. Ejemplos:
-   - `01-mvp-arkanoid.md` → rama `spec-01-mvp-arkanoid`
-   - `02-powerups.md` → rama `spec-02-powerups`
+1. Derive the branch name from the spec file's full name, without the extension. Format: `spec-NN-slug`. Examples:
+   - `01-mvp-arkanoid.md` → branch `spec-01-mvp-arkanoid`
+   - `02-powerups.md` → branch `spec-02-powerups`
 
-2. Verifica si la rama ya existe:
-   - Si **no existe**: créala con `git checkout -b spec-NN-slug`.
-   - Si **ya existe**: informa al usuario que la rama ya existía (puede significar que se retomó un trabajo previo).
-   - En ambos casos: muévete a la rama con `git checkout spec-NN-slug` y confirma que el cambio se realizó correctamente antes de continuar.
+2. Check whether the branch already exists:
+   - If it **does not exist**: create it with `git checkout -b spec-NN-slug`.
+   - If it **already exists**: inform the user that the branch already existed (it may mean previous work is being resumed).
+   - In both cases: switch to the branch with `git checkout spec-NN-slug` and confirm the change was successful before continuing.
 
-3. Confirma visualmente al usuario que la rama fue creada y que estás en ella:
+3. Visually confirm to the user that the branch was created and that you are on it:
    ```
-   ✅ Listo para implementar.
+   ✅ Ready to implement.
 
    Spec:   specs/NN-slug.md
-   Rama:   spec-NN-slug  (activa)
-   Estado: Aprobado
+   Branch: spec-NN-slug  (active)
+   State:  Aprobado
    ```
 
-4. **No empieces a implementar todavía.** Primero muestra el resumen del spec al usuario para que lo tenga fresco. Extrae y muestra:
-   - El **objetivo** (la línea después de `**Objetivo:**`).
-   - El **alcance** (la sección `## Alcance` completa).
-   - El **plan de implementación** (la sección con los pasos numerados).
-   - Los **criterios de aceptación** (el checklist).
+4. **Do not start implementing yet.** First show the spec summary to the user so they have it fresh. Extract and show:
+   - The **objective** (the line after `**Objetivo:**`).
+   - The **scope** (the full `## Alcance` section).
+   - The **implementation plan** (the section with the numbered steps).
+   - The **acceptance criteria** (the checklist).
 
 ---
 
-### Fase 4 — Implementar paso a paso
+### Phase 4 — Implement step by step
 
-Después de mostrar el resumen del spec, di al usuario:
+After showing the spec summary, tell the user:
 
 ```
-Voy a implementar el spec siguiendo exactamente el plan de implementación.
-Voy a pausar después de cada paso para que puedas revisar el diff.
+I am going to implement the spec following the implementation plan exactly.
+I will pause after each step so you can review the diff.
 
-¿Empezamos con el Paso 1?
+Shall we start with Step 1?
 ```
 
-Espera confirmación explícita ("sí", "adelante", "go", o equivalente). No empieces sin ella.
+Wait for explicit confirmation ("yes", "go ahead", "go", or equivalent). Do not start without it.
 
-Una vez confirmado, sigue estas reglas durante toda la implementación:
+Once confirmed, follow these rules during the entire implementation:
 
-**Una regla por encima de todas:** implementa lo que dice el spec. Si algo del spec te parece subóptimo, menciónalo como observación pero implementa lo acordado. Los cambios al spec van en el spec, no en el código por sorpresa.
+**One rule above all:** implement what the spec says. If something in the spec looks suboptimal to you, mention it as an observation but implement what was agreed. Changes to the spec go into the spec, not into the code by surprise.
 
-**Ritmo de trabajo:**
-- Implementa un paso del plan.
-- Muestra un resumen de qué archivos tocaste y qué hiciste.
-- Di: `Paso N completado. ¿Revisas el diff y me dices si sigo con el Paso N+1?`
-- Espera confirmación antes de continuar.
+**Work rhythm:**
+- Implement one step of the plan.
+- Show a summary of which files you touched and what you did.
+- Say: `Step N completed. Could you review the diff and let me know if I continue with Step N+1?`
+- Wait for confirmation before continuing.
 
-**Si durante la implementación encuentras una ambigüedad** que el spec no resuelve:
-- Para.
-- Describe exactamente la ambigüedad.
-- Presenta dos o tres opciones concretas.
-- Espera decisión del usuario.
-- No improvises.
+**If during the implementation you find an ambiguity** the spec does not resolve:
+- Stop.
+- Describe the ambiguity exactly.
+- Present two or three concrete options.
+- Wait for the user's decision.
+- Do not improvise.
 
-**Si el usuario pide algo que está fuera del alcance del spec:**
-- Recuérdale que está fuera del alcance de este spec.
-- Sugiere anotarlo para el siguiente spec.
-- No lo implementes en esta rama.
+**If the user asks for something that is out of the spec's scope:**
+- Remind them that it is out of this spec's scope.
+- Suggest noting it down for the next spec.
+- Do not implement it on this branch.
 
-**Al terminar el último paso:**
+**When finishing the last step:**
 ```
-✅ Todos los pasos del plan están implementados.
+✅ All steps of the plan are implemented.
 
-Próximo paso: verifica los criterios de aceptación del spec uno por uno.
-Si todos pasan, actualiza el estado del spec a "Implementado" y haz el
-commit final antes de mergear esta rama.
+Next step: verify the spec's acceptance criteria one by one.
+If they all pass, update the spec's state to "Implementado" and make
+the final commit before merging this branch.
 ```
 
 ---
 
-## Resumen del comportamiento esperado
+## Summary of expected behavior
 
 ```
 /impl-spec 01-mvp-arkanoid
 
-  Fase 1  →  Encuentra specs/01-mvp-arkanoid.md
-  Fase 2  →  Lee el estado → "Aprobado" → ✅ continúa
-  Fase 3  →  git checkout -b spec-01-mvp-arkanoid → git checkout spec-01-mvp-arkanoid
-             Muestra objetivo, alcance, plan y criterios
-  Fase 4  →  Implementa paso a paso con pausas
-             Termina recordando verificar criterios de aceptación
+  Phase 1  →  Finds specs/01-mvp-arkanoid.md
+  Phase 2  →  Reads the state → "Aprobado" → ✅ continues
+  Phase 3  →  git checkout -b spec-01-mvp-arkanoid → git checkout spec-01-mvp-arkanoid
+              Shows objective, scope, plan and criteria
+  Phase 4  →  Implements step by step with pauses
+              Ends by reminding to verify the acceptance criteria
 
-/impl-spec 02-powerups  (estado: Borrador)
+/impl-spec 02-powerups  (state: Borrador)
 
-  Fase 1  →  Encuentra specs/02-powerups.md
-  Fase 2  →  Lee el estado → "Borrador" → ❌ se detiene
-             Muestra mensaje de error estándar
-             No crea rama, no toca código
+  Phase 1  →  Finds specs/02-powerups.md
+  Phase 2  →  Reads the state → "Borrador" → ❌ stops
+              Shows the standard error message
+              Does not create branch, does not touch code
 ```
