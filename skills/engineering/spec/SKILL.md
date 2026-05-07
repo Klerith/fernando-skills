@@ -2,7 +2,7 @@
 name: spec
 description: Designs and develops specs following the spec-driven method. Asks clarifying questions before proposing structure, and builds the spec section by section. Use it when starting a large feature, before writing code.
 disable-model-invocation: true
-argument-hint: [short feature description or requirement]
+argument-hint: 'short feature description or requirement'
 ---
 
 # /spec — Guided spec designer
