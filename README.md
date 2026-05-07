@@ -200,6 +200,12 @@ That separation is what prevents silent scope creep.
 npx skills@latest add Klerith/fernando-skills
 ```
 
+To uninstall:
+
+```bash
+npx skills@latest remove Klerith/fernando-skills
+```
+
 
 ### Option 2 — Other agents (Cursor, Codex, Antigravity)
 
