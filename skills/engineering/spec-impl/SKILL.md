@@ -8,6 +8,19 @@ allowed-tools: Bash(git status:*), Bash(git branch:*), Bash(git checkout:*), Bas
 
 # /spec-impl — Implementer of approved specs
 
+## Session context
+
+Current repository state:
+!`git status --short`
+
+Current branch:
+!`git branch --show-current`
+
+Specs available in this folder:
+!`ls specs/ 2>/dev/null || echo "The specs/ folder does not exist"`
+
+---
+
 ## Instructions
 
 Follow these four phases in strict order. **Do not advance to the next phase if the previous one did not complete correctly.**
