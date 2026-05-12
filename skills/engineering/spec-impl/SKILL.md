@@ -47,8 +47,7 @@ If `$ARGUMENTS` has a value:
 
 ### Phase 2 — Validate the spec's state
 
-Read the file of the spec you found:
-!`cat specs/$ARGUMENTS.md 2>/dev/null || echo "FILE_NOT_FOUND"`
+Read the spec file you located in Phase 1 using the Read tool or `cat`.
 
 In the file's contents, look for the line that contains the spec's state. The header label is typically `**Status:**` (English) or `**Estado:**` (Spanish), but it may use any language. Match by position (status line near the top of the spec) and by the surrounding state machine, not by the exact label.
 
