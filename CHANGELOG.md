@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1](https://github.com/Klerith/fernando-skills/compare/v0.1.0...v0.1.1) (2026-05-13)
+
+
+### Bug Fixes
+
+* remove shell command directives to pass Gen Agent Trust Hub audit ([b5d4402](https://github.com/Klerith/fernando-skills/commit/b5d4402e3ffe6305971104882487192d0e603a53))
+* remove shell injection vector in spec-impl Phase 2 ([b946f46](https://github.com/Klerith/fernando-skills/commit/b946f46f752e71a74c85080a85ce20c478d8df99))
+* **spec:** stop after saving spec and point to /spec-impl ([1cbde98](https://github.com/Klerith/fernando-skills/commit/1cbde987627171305411d2be20ff0caad2739c20))
+* use single quotes for argument-hint in spec SKILL.md ([7f6252a](https://github.com/Klerith/fernando-skills/commit/7f6252a5f16a05cc4b4469366697aaf892809f23))
+
 ## [Unreleased]
 
 ## [0.1.0] - 2026-05-07
