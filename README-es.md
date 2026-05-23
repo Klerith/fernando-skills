@@ -265,7 +265,7 @@ Opcionalmente, añade un `specs/README.md` que documente la convención (ver el 
 # 1. Diseñar el spec con preguntas de clarificación
 /spec niveles-y-highscores
 
-# Claude lee CLAUDE.md y specs/ existentes, hace preguntas
+# Claude lee el archivo de memoria del proyecto (CLAUDE.md, AGENTS.md, GEMINI.md o README.md) y specs/ existentes, hace preguntas
 # en bloques, desarrolla el spec sección por sección,
 # y al final lo guarda como specs/03-niveles-y-highscores.md
 # con estado: Borrador.
@@ -288,7 +288,7 @@ Opcionalmente, añade un `specs/README.md` que documente la convención (ver el 
 
 Diseña el documento de la feature. Pasa por cuatro fases:
 
-1. **Contexto** — lee `CLAUDE.md` y los specs previos.
+1. **Contexto** — lee el archivo de memoria del proyecto (`CLAUDE.md`, `AGENTS.md`, `GEMINI.md` o `README.md`, el primero que exista) y los specs previos.
 2. **Clarificación** — hace preguntas en bloques de 3-5 hasta que la feature está claramente definida.
 3. **Desarrollo sección por sección** — genera y confirma cada sección del spec antes de pasar a la siguiente.
 4. **Guardar** — escribe el archivo en `specs/NN-slug.md` con estado `Borrador`.

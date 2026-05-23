@@ -24,7 +24,7 @@ Read `template.md` (in the same directory as this skill) to see the full structu
 
 Before asking questions about the feature, make sure you have project context:
 
-1. Read `CLAUDE.md` if it exists.
+1. Read the project-memory file, if one exists. Try in order and stop at the first hit: `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, `README.md`. This adapts the skill to whichever agent is running it (Claude Code, Codex, Gemini CLI, etc.).
 2. List the contents of `specs/` to see which specs already exist and how they are numbered.
 3. If previous specs exist, read at least the two most recent ones to pick up the project's conventions.
 

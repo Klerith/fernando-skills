@@ -274,7 +274,7 @@ Optionally, add a `specs/README.md` documenting the convention (see the example 
 # 1. Design the spec with clarifying questions
 /spec levels-and-highscores
 
-# Claude reads CLAUDE.md and existing specs/, asks questions
+# Claude reads the project-memory file (CLAUDE.md, AGENTS.md, GEMINI.md, or README.md) and existing specs/, asks questions
 # in blocks, develops the spec section by section,
 # and finally saves it as specs/03-levels-and-highscores.md
 # with status: Draft.
@@ -297,7 +297,7 @@ Optionally, add a `specs/README.md` documenting the convention (see the example 
 
 Designs the feature document. Goes through four phases:
 
-1. **Context** — reads `CLAUDE.md` and previous specs.
+1. **Context** — reads the project-memory file (`CLAUDE.md`, `AGENTS.md`, `GEMINI.md`, or `README.md`, whichever exists first) and previous specs.
 2. **Clarification** — asks questions in blocks of 3-5 until the feature is clearly defined.
 3. **Section by section development** — generates and confirms each spec section before moving on.
 4. **Save** — writes the file in `specs/NN-slug.md` with status `Draft`.
