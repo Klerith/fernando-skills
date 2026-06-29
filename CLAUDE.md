@@ -34,6 +34,8 @@ This repo encodes a two-skill pair:
 ### `/spec`
 Guides the user through 4 phases: read project context → clarify with questions (blocks of 3–5) → draft each spec section one at a time with user confirmation → save to `specs/NN-slug.md`.
 
+On save, it also seeds `specs/.spec-config.yml` (default `AutoCreateBranch: true`) **only if the file is missing** — an existing config is never overwritten. This is how the `AutoCreateBranch` flag that `/spec-impl` reads gets created without the user knowing the file exists.
+
 Output file format: `specs/NN-slug.md` with a header block:
 ```
 > **Estado:** Borrador · **Depende de:** ... · **Fecha:** YYYY-MM-DD
@@ -50,6 +52,8 @@ Accepts `<NN-slug>` as argument. Phases:
 2. Read `**Estado:**` — abort with a standard error message if it is not exactly `Aprobado`.
 3. Create and switch to branch `spec-NN-slug`.
 4. Implement the spec's plan step-by-step, pausing after each step for diff review.
+
+Branch creation in step 3 is gated by the `AutoCreateBranch` flag, read at skill-load time from `specs/.spec-config.yml` via a `!`cat`` snippet. Default (file or value absent) is `true` → branch is created automatically. An explicit `false` makes the skill ask `[y/N]` before creating the branch; on decline it implements on the current branch. There is still no runtime config infra — the flag is just a value injected into the prompt and interpreted by the model.
 
 At completion, remind the user to verify acceptance criteria and mark the spec `Implementado` manually before merging.
 

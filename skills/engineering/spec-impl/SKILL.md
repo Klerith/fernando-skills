@@ -19,6 +19,9 @@ Current branch:
 Specs available in this folder:
 !`ls specs/ 2>/dev/null || echo "The specs/ folder does not exist"`
 
+Branch-creation config:
+!`cat specs/.spec-config.yml 2>/dev/null || echo "AutoCreateBranch: true (default, no config file)"`
+
 ---
 
 ## Instructions
@@ -105,19 +108,34 @@ Once you have confirmed the state means `Approved`:
    - `01-mvp-arkanoid.md` → branch `spec-01-mvp-arkanoid`
    - `02-powerups.md` → branch `spec-02-powerups`
 
-2. Check whether the branch already exists:
+2. Read the `AutoCreateBranch` flag from the **Branch-creation config** shown in the session context above.
 
-   - If it **does not exist**: create it with `git checkout -b spec-NN-slug`.
+   - If the config file does not exist, the value is missing, or the value is unrecognized → treat it as `true` (the default).
+   - Only an explicit `false` (in any capitalization) disables automatic branch creation.
+
+   **If `AutoCreateBranch` is `true` (default):** proceed without asking.
+
+   - If the branch **does not exist**: create it with `git checkout -b spec-NN-slug`.
    - If it **already exists**: inform the user that the branch already existed (it may mean previous work is being resumed).
    - In both cases: switch to the branch with `git checkout spec-NN-slug` and confirm the change was successful before continuing.
 
-3. Visually confirm to the user that the branch was created and that you are on it:
+   **If `AutoCreateBranch` is `false`:** ask before touching git. Show:
+
+   ```
+   AutoCreateBranch is set to false.
+   Create and switch to the branch spec-NN-slug? [y/N]
+   ```
+
+   - If the user answers **yes**: create/switch to the branch exactly as in the `true` case above.
+   - If the user answers **no** or leaves it empty: **do not create any branch.** Tell the user you will implement on the current branch (the one shown in the session context above) and ask for explicit confirmation to continue there. Do not improvise — wait for the answer.
+
+3. Visually confirm to the user the spec is ready and which branch is active:
 
    ```
    ✅ Ready to implement.
 
    Spec:   specs/NN-slug.md
-   Branch: spec-NN-slug  (active)
+   Branch: spec-NN-slug  (active)   (← or the current branch, if no new branch was created)
    State:  Approved   (← echo back the actual value found in the spec)
    ```
 
@@ -200,3 +218,5 @@ in your repo's language) and make the final commit before merging this branch.
               Shows the standard error message
               Does not create branch, does not touch code
 ```
+
+**Branch creation is controlled by the `AutoCreateBranch` flag** in `specs/.spec-config.yml`. It defaults to `true` (create the branch automatically, as shown above). Set it to `false` to make Phase 3 ask `[y/N]` before creating the branch.

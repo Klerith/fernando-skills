@@ -302,6 +302,13 @@ Implementa un spec aprobado. Pasa por cuatro fases:
 3. **Crear rama** — `git checkout -b spec-NN-slug` y se mueve a ella.
 4. **Implementar** — paso a paso con pausas, mostrando el resumen del spec primero.
 
+> **Control de la rama:** La Fase 3 lee el flag `AutoCreateBranch` de `specs/.spec-config.yml`. Por defecto es `true` (crea la rama automáticamente). Ponlo en `false` para que `/spec-impl` pregunte `[s/N]` antes de crear cualquier rama — útil si el nombrado de ramas es parte de tu propio Git workflow.
+>
+> ```yaml
+> # specs/.spec-config.yml
+> AutoCreateBranch: false
+> ```
+
 ### Estados de un spec
 
 | Estado         | Significado                                                              |

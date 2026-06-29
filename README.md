@@ -311,6 +311,13 @@ Implements an approved spec. Goes through four phases:
 3. **Create branch** — `git checkout -b spec-NN-slug` and switches to it.
 4. **Implement** — step by step with pauses, showing the spec summary first.
 
+> **Branch control:** Phase 3 reads the `AutoCreateBranch` flag from `specs/.spec-config.yml`. It defaults to `true` (creates the branch automatically). Set it to `false` to make `/spec-impl` ask `[y/N]` before creating any branch — useful if branch naming is part of your own Git workflow.
+>
+> ```yaml
+> # specs/.spec-config.yml
+> AutoCreateBranch: false
+> ```
+
 ### Spec states
 
 | State         | Meaning                                                                    |
