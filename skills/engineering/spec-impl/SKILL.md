@@ -166,6 +166,13 @@ Once confirmed, follow these rules during the entire implementation:
 
 **One rule above all:** implement what the spec says. If something in the spec looks suboptimal to you, mention it as an observation but implement what was agreed. Changes to the spec go into the spec, not into the code by surprise.
 
+**Code quality standards:**
+
+- Write all code (identifiers, function names, variables, types, file names) in **English** using descriptive, self-explanatory names.
+- Write all **code comments in Latin Spanish** (español latino), clear and concise.
+- Follow **Clean Code** principles: small single-responsibility functions, meaningful names, no dead code, minimal nesting, clear intent, avoid surprises.
+- Comments must explain *why*, not *what* — only add them when they provide value the code cannot express on its own.
+
 **Work rhythm:**
 
 - Implement one step of the plan.
