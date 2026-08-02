@@ -62,11 +62,15 @@ Stop when you can answer these three questions without assuming anything:
 
 If you still cannot answer one of them, keep asking.
 
-### Phase 3 — Develop the spec section by section
+### Phase 3 — Write the spec
 
-Once you have clarity, **do not generate the full spec in one shot**. You will develop the template's sections **one by one**, showing each section to the user and waiting for confirmation before moving to the next one.
+Once Phase 2 is closed, decide how to write it:
 
-Strict order:
+**If you already have all the information you need** — meaning you can answer the three Phase 2 questions (which files change, what the first and last executable steps are, how to verify it is finished) **without assuming anything** — then **do not go section by section**. Write the complete spec and jump straight to Phase 4 to save the file. Do not ask for section-by-section confirmation, and do not show a draft for approval first: the user already answered everything in Phase 2, and re-asking is friction. The user reviews the saved file and asks for changes if needed.
+
+**Only if information is still missing** (the user cut Phase 2 short, an answer was vague, or some section cannot be written without inventing something), develop the sections **one by one**, showing each one and waiting for confirmation before moving to the next.
+
+In both cases the content follows the same order:
 
 1. **Header** (state, dependencies, date, one-sentence objective). The one-sentence objective is critical — if it does not fit in one sentence, go back to Phase 2.
 2. **Scope** (what is in and what is NOT). The "not in" must be explicit.
@@ -76,7 +80,7 @@ Strict order:
 6. **Decisions taken and discarded** (with brief justification).
 7. **Identified risks** (only if applicable — if no relevant risks exist, skip it).
 
-**After each section:**
+**After each section (only in the section-by-section mode):**
 
 - Show it formatted in markdown.
 - Ask: "Does this section stay like this or do you want to tweak it?"
@@ -92,12 +96,12 @@ Strict order:
 
 ### Phase 4 — Save the spec
 
-When all sections are confirmed:
+When the content is ready (either because you had everything, or because all sections were confirmed):
 
 1. Determine the next sequential number by looking at `specs/`. If the last one is `02-powerups.md`, this one will be `03-`.
-2. Generate a short slug from the objective (e.g. `levels-and-highscores`).
-3. Ask the user whether the proposed file name works for them before writing it.
-4. Create the file at `specs/NN-slug.md` with all approved sections.
+2. Generate a short slug from the objective (e.g. `levels-and-highscores`). If the user passed a slug in `$ARGUMENTS`, use it.
+3. Write the file directly. **Do not ask for permission to write it and do not ask whether the file name works** — announce the path in the final confirmation. Only ask if the target file already exists.
+4. Create the file at `specs/NN-slug.md` with all the sections.
 5. Mark the state as `Draft` by default. **Do not mark it as `Approved` automatically** — the user does that once they have re-read it.
 6. **Seed the config file if it does not exist.** Check for `specs/.spec-config.yml`. If it is **missing**, create it with the default content below. If it **already exists, leave it untouched** — never overwrite the user's settings.
 
@@ -121,8 +125,8 @@ When all sections are confirmed:
 
 - **Never write code during this command.** Only the spec's `.md` file at the end.
 - **Never propose implementing the spec after saving it.** Your job ends when the file is written. The user runs `/spec-impl` when they are ready.
-- **Never assume decisions the user did not confirm.** If you are missing information, ask.
-- **Never generate the full spec in a single response.** Section by section, with confirmation.
+- **Never assume decisions the user did not confirm.** If you are missing information, ask — in Phase 2, which is where the questions belong.
+- **Do not re-ask in Phase 3 what was already answered in Phase 2.** If the information is complete, write the whole spec and save it. Section-by-section confirmation is the fallback for incomplete information, not the default.
 - **If the user wants to speed up and skip Phase 2**, remind them: "Questions now save hours later. Are you sure you want to skip them?". If they insist, respect their decision but record it in the spec's decisions section ("Quick definition without detailed clarification").
 - **If the feature is too big** (does not fit in one sentence, touches more than three areas of the system, requires decisions in four or more domains), propose splitting it into two or more specs before continuing.
 
@@ -140,6 +144,6 @@ Example of a well-formed block:
 
 ## Arguments
 
-If the user invoked `/spec levels-and-highscores`, use `levels-and-highscores` as the initial slug suggestion, but confirm with the user before writing the file.
+If the user invoked `/spec levels-and-highscores`, use `levels-and-highscores` as the slug for the file name without asking for confirmation.
 
 If they invoked `/spec` without arguments, start by asking for the one-sentence description.
