@@ -3,7 +3,7 @@ name: spec-impl
 description: Implements an approved spec. Validates that the state means "Approved" (in any language), creates a git branch named after the spec, switches to it, and starts the implementation step by step with pauses to review diffs.
 disable-model-invocation: true
 argument-hint: <NN-spec-name>
-allowed-tools: Bash(git status:*), Bash(git branch:*), Bash(git checkout:*), Bash(cat:*), Bash(ls:*)
+allowed-tools: Read, Glob, Grep, Edit, Write, AskUserQuestion, Bash(git status:*), Bash(git branch:*), Bash(git checkout:*), Bash(git log:*), Bash(git diff:*), Bash(git stash:*), Bash(cat:*), Bash(ls:*)
 ---
 
 # /spec-impl — Implementer of approved specs
@@ -103,6 +103,17 @@ Do not offer alternatives, do not suggest "I can still start if you want". The b
 
 Once you have confirmed the state means `Approved`:
 
+0. **Check the working tree first.** Look at the `git status --short` output in the session context above. If it is **not empty**, stop and show the pending changes, then ask:
+
+   ```
+   ⚠️ There are uncommitted changes in the working tree.
+   Switching branches would carry them over. What do you want to do?
+     1. Commit or stash them yourself, then re-run this command  (recommended)
+     2. Continue anyway — the changes travel to the new branch
+   ```
+
+   Wait for the answer. **Do not stash or commit on the user's behalf** unless they explicitly ask for it. If the working tree is clean, skip straight to step 1 without mentioning it.
+
 1. Derive the branch name from the spec file's full name, without the extension. Format: `spec-NN-slug`. Examples:
 
    - `01-mvp-arkanoid.md` → branch `spec-01-mvp-arkanoid`
@@ -116,7 +127,7 @@ Once you have confirmed the state means `Approved`:
    **If `AutoCreateBranch` is `true` (default):** proceed without asking.
 
    - If the branch **does not exist**: create it with `git checkout -b spec-NN-slug`.
-   - If it **already exists**: inform the user that the branch already existed (it may mean previous work is being resumed).
+   - If it **already exists**: this means previous work is being resumed. Switch to it, read `git log --oneline` on the branch, and tell the user which steps of the plan already look done and which step you propose to resume from. Wait for confirmation on the resume point before implementing anything.
    - In both cases: switch to the branch with `git checkout spec-NN-slug` and confirm the change was successful before continuing.
 
    **If `AutoCreateBranch` is `false`:** ask before touching git. Show:
@@ -164,6 +175,8 @@ Wait for explicit confirmation ("yes", "go ahead", "go", or equivalent). Do not 
 
 Once confirmed, follow these rules during the entire implementation:
 
+**Never commit automatically.** Not per step, not at the end. You write the code and show the diff; committing is the user's decision and the user's command. Only commit if they explicitly ask you to.
+
 **One rule above all:** implement what the spec says. If something in the spec looks suboptimal to you, mention it as an observation but implement what was agreed. Changes to the spec go into the spec, not into the code by surprise.
 
 **Work rhythm:**
@@ -202,7 +215,7 @@ in your repo's language) and make the final commit before merging this branch.
 ## Summary of expected behavior
 
 ```
-/impl-spec 01-mvp-arkanoid
+/spec-impl 01-mvp-arkanoid
 
   Phase 1  →  Finds specs/01-mvp-arkanoid.md
   Phase 2  →  Reads the state → "Approved" (or "Aprobado", etc.) → ✅ continues
@@ -211,7 +224,7 @@ in your repo's language) and make the final commit before merging this branch.
   Phase 4  →  Implements step by step with pauses
               Ends by reminding to verify the acceptance criteria
 
-/impl-spec 02-powerups  (state: Draft / Borrador)
+/spec-impl 02-powerups  (state: Draft / Borrador)
 
   Phase 1  →  Finds specs/02-powerups.md
   Phase 2  →  Reads the state → "Draft" → ❌ stops
