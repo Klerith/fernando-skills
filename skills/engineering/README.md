@@ -2,5 +2,5 @@
 
 | Skill | What it does |
 | --- | --- |
-| [`spec`](./spec/SKILL.md) | Guides you through a 4-phase spec-driven design session and saves the result to `specs/NN-slug.md`. |
-| [`spec-impl`](./spec-impl/SKILL.md) | Implements an `Approved` spec (in any language) step by step on a `spec-NN-slug` branch, pausing for diff review. Never commits on its own. |
+| [`spec`](./spec/SKILL.md) | Guides you through a spec-driven design session in three gated documents (`requirements.md`, `design.md`, `tasks.md`) saved to `.sdd/specs/NN-slug/`, and bootstraps the project's steering context in `.sdd/steering/`. |
+| [`spec-impl`](./spec-impl/SKILL.md) | Implements an `Approved` spec (in any language) task by task on a `spec-NN-slug` branch, ticking `tasks.md` and pausing for diff review, then updates `.sdd/steering/`. Never commits on its own. |
