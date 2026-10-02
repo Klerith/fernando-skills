@@ -4,17 +4,19 @@
 </p>
 
 <p align="center">
-  <img alt="License" src="https://img.shields.io/github/license/Klerith/fernando-skills">
-  <img alt="Latest Release" src="https://img.shields.io/github/v/release/Klerith/fernando-skills">
-  <img alt="GitHub Stars" src="https://img.shields.io/github/stars/Klerith/fernando-skills?style=social">
+  <img alt="License" src="https://img.shields.io/github/license/SantiagoRensonnet/spec-driven-development-skill">
+  <img alt="Latest Release" src="https://img.shields.io/github/v/release/SantiagoRensonnet/spec-driven-development-skill">
+  <img alt="GitHub Stars" src="https://img.shields.io/github/stars/SantiagoRensonnet/spec-driven-development-skill?style=social">
   <img alt="Skills" src="https://img.shields.io/badge/skills-2-blue">
 </p>
 
 ## Quick start
 
 ```bash
-npx skills@latest add Klerith/fernando-skills
+npx skills@latest add SantiagoRensonnet/spec-driven-development-skill
 ```
+
+> This is a standalone evolution of [Klerith/fernando-skills](https://github.com/Klerith/fernando-skills): specs are split into requirements → design → tasks, and the project keeps persistent steering context under `.sdd/`. See [Switching from fernando-skills](#switching-from-fernando-skills).
 
 ## Skills
 
@@ -244,22 +246,29 @@ That separation is what prevents silent scope creep.
 ### Option 1 — skills.sh (recommended, Claude Code)
 
 ```bash
-npx skills@latest add Klerith/fernando-skills
+# Project-level (installs into ./.claude/skills of the current project)
+npx skills@latest add SantiagoRensonnet/spec-driven-development-skill
+
+# User-level (available in all your projects)
+npx skills@latest add SantiagoRensonnet/spec-driven-development-skill -g
+
+# Preview what the repo ships without installing
+npx skills@latest add SantiagoRensonnet/spec-driven-development-skill --list
 ```
 
-To uninstall:
+To update or uninstall:
 
 ```bash
-npx skills@latest remove Klerith/fernando-skills
+npx skills@latest update spec spec-impl
+npx skills@latest remove spec spec-impl      # add -g if you installed globally
 ```
-
 
 ### Option 2 — Other agents (Cursor, Codex, Antigravity)
 
 ```bash
-git clone https://github.com/Klerith/fernando-skills ~/.fernando-skills
+git clone https://github.com/SantiagoRensonnet/spec-driven-development-skill ~/.sdd-skills
 cd ~/your-project
-~/.fernando-skills/scripts/install-to-agent.sh <agent>
+~/.sdd-skills/scripts/install-to-agent.sh <agent>
 ```
 
 `<agent>` can be `claude`, `cursor`, `codex`, or `antigravity`.
@@ -273,19 +282,35 @@ cd ~/your-project
 
 > Cursor and Codex don't natively support Claude Code's `argument-hint` or `disable-model-invocation` frontmatter. The installer drops those fields and keeps the body — the workflow is the same, only the trigger changes.
 
+To update, `git -C ~/.sdd-skills pull` and re-run the installer.
+
 ### Option 3 — Manual
 
 ```bash
+git clone https://github.com/SantiagoRensonnet/spec-driven-development-skill
+cd spec-driven-development-skill
+
 # Personal (all your projects)
 mkdir -p ~/.claude/skills
 cp -r skills/engineering/spec ~/.claude/skills/
 cp -r skills/engineering/spec-impl ~/.claude/skills/
 
-# Or per-project (versioned in git)
+# Or per-project (versioned in git) — run from your project root
 mkdir -p .claude/skills
-cp -r skills/engineering/spec .claude/skills/
-cp -r skills/engineering/spec-impl .claude/skills/
+cp -r /path/to/spec-driven-development-skill/skills/engineering/spec .claude/skills/
+cp -r /path/to/spec-driven-development-skill/skills/engineering/spec-impl .claude/skills/
 ```
+
+### Switching from fernando-skills
+
+Both repos ship skills named `spec` and `spec-impl`, so **don't install them side by side** — whichever was installed last silently wins. Remove the original first:
+
+```bash
+npx skills@latest remove spec spec-impl        # add -g if it was a global install
+npx skills@latest add SantiagoRensonnet/spec-driven-development-skill
+```
+
+Existing specs keep working: `/spec-impl` still reads legacy `specs/NN-slug.md` files, and `/spec` continues the numbering from them and carries over `specs/.spec-config.yml` into `.sdd/config.yml`.
 
 No setup is needed in your project: `/spec` creates `.sdd/` (specs, steering files and config) the first time you run it.
 
