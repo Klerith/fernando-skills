@@ -28,16 +28,12 @@ Three to five sentences: the shape of the solution and how it fits into the exis
 
 A Mermaid diagram of the components involved and how they connect. Mark new components and changed components so the reader sees the delta.
 
-````markdown
-## Architecture
-
 ```mermaid
 flowchart LR
     UI[UploadForm<br/>new] --> API[POST /api/cv<br/>new]
     API --> Parser[cvParser<br/>new]
     API --> Store[(cv table<br/>changed)]
 ```
-````
 
 Keep it to the components this spec touches plus their direct neighbors. The whole-system view lives in `.sdd/steering/architecture.md`.
 
@@ -92,9 +88,6 @@ If the feature introduces no new data, write it explicitly: _"This feature intro
 
 How data moves through the components for the main use case. Use a Mermaid sequence diagram when there are three or more participants; a numbered list is enough otherwise.
 
-````markdown
-## Data flow
-
 ```mermaid
 sequenceDiagram
     actor U as User
@@ -105,7 +98,6 @@ sequenceDiagram
     API->>Store: insert Cv
     API-->>UploadForm: 201 { id }
 ```
-````
 
 ---
 
@@ -197,4 +189,4 @@ If nothing changes, write: _"No steering changes."_
 - **Nothing outside the scope.** If the design needs something the requirements do not ask for, go back to the requirements.
 - **No long executable code.** Signatures, types and short snippets are fine; full function bodies are not.
 - **No TODOs.** Make the decision or note it as open with a reason.
-- **Standard markdown + Mermaid.** It must render on GitHub without surprises.
+- **Standard markdown + Mermaid.** It must render on GitHub without surprises. Diagrams go in a top-level ` ```mermaid ` fenced block — never nested inside another code fence, or previewers show them as plain code.

@@ -4,9 +4,10 @@ Reference for `.sdd/steering/architecture.md`: **the general design of the whole
 
 Keep it short (under ~150 lines). It describes the system **as it is implemented today**, not plans. It is updated by `/spec-impl` after each spec is implemented, from that spec's **Steering impact** section.
 
+The template follows between the two horizontal rules. It is shown rendered (not inside a code fence) so the Mermaid diagrams preview correctly. When writing the real file, keep each diagram as a top-level ` ```mermaid ` block, never nested inside another code fence.
+
 ---
 
-````markdown
 # Architecture
 
 > **Last updated:** YYYY-MM-DD · by SPEC NN (or "initial generation")
@@ -62,6 +63,7 @@ erDiagram
 ## Architectural decisions
 
 - **Decision** — reason. (SPEC NN)
-````
+
+---
 
 Tag components, flows and decisions with the spec that introduced them, so a reader can jump to the full reasoning in that spec's `design.md`.
