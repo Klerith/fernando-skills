@@ -40,9 +40,9 @@ npx skills@latest add Klerith/fernando-skills
 
 ---
 
-## Qué es spec-driven design
+## Qué es spec-driven development
 
-Spec-driven design es un enfoque donde **el spec es el artefacto principal del trabajo, no el código**. El código es la consecuencia.
+Spec-driven development es un enfoque donde **el spec es el artefacto principal del trabajo, no el código**. El código es la consecuencia.
 
 Suena obvio. La diferencia con "documentar antes de programar" de toda la vida es que en spec-driven el spec **no es opcional ni decorativo**: es el contrato que guía la ejecución, se versiona en git, y se mantiene vivo. Si el código diverge del spec, uno de los dos está mal.
 
