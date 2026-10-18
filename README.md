@@ -9,7 +9,7 @@
   <img alt="License" src="https://img.shields.io/github/license/Klerith/fernando-skills">
   <img alt="Latest Release" src="https://img.shields.io/github/v/release/Klerith/fernando-skills">
   <img alt="GitHub Stars" src="https://img.shields.io/github/stars/Klerith/fernando-skills?style=social">
-  <img alt="Skills" src="https://img.shields.io/badge/skills-2-blue">
+  <img alt="Skills" src="https://img.shields.io/badge/skills-3-blue">
 </p>
 
 ## Quick start
@@ -24,6 +24,7 @@ npx skills@latest add Klerith/fernando-skills
 | --- | --- | --- |
 | `/spec` | Designs the feature document by asking clarifying questions | — |
 | `/spec-impl` | Validates the spec is approved and implements step by step | `<NN-slug>` |
+| `/actualizar-manual-tecnico` | Creates or updates `docs/manual-tecnico.md` from recent git changes | `[ref-git-base]` |
 
 ---
 
