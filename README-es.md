@@ -1,21 +1,21 @@
 [English](README.md) · [Español](README-es.md)
 
 <p align="center">
-  <h1 align="center">Spec-Driven Skills para Claude Code</h1>
+  <h1 align="center">Development Custom Skills para Claude Code</h1>
   <p align="center">Planifica la feature. Apruébala. Impleméntala paso a paso.</p>
 </p>
 
 <p align="center">
-  <img alt="Licencia" src="https://img.shields.io/github/license/Klerith/fernando-skills">
-  <img alt="Último release" src="https://img.shields.io/github/v/release/Klerith/fernando-skills">
-  <img alt="GitHub Stars" src="https://img.shields.io/github/stars/Klerith/fernando-skills?style=social">
-  <img alt="Skills" src="https://img.shields.io/badge/skills-2-blue">
+  <img alt="Licencia" src="https://img.shields.io/github/license/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills">
+  <img alt="Último release" src="https://img.shields.io/github/v/release/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills">
+  <img alt="GitHub Stars" src="https://img.shields.io/github/stars/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills?style=social">
+  <img alt="Skills" src="https://img.shields.io/badge/skills-3-blue">
 </p>
 
 ## Inicio rápido
 
 ```bash
-npx skills@latest add Klerith/fernando-skills
+npx skills@latest add emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
 ```
 
 ## Skills
@@ -213,22 +213,22 @@ Esa separación es lo que evita el scope creep silencioso.
 ### Opción 1 — skills.sh (recomendado, Claude Code)
 
 ```bash
-npx skills@latest add Klerith/fernando-skills
+npx skills@latest add emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
 ```
 
 Para desinstalar:
 
 ```bash
-npx skills@latest remove Klerith/fernando-skills
+npx skills@latest remove emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills
 ```
 
 
 ### Opción 2 — Otros agentes (Cursor, Codex, Antigravity)
 
 ```bash
-git clone https://github.com/Klerith/fernando-skills ~/.fernando-skills
+git clone https://github.com/emmanuel-tabares-ortiz-tech/spec-driven-develpment-custom-skills ~/.dev-custom-skills
 cd ~/tu-proyecto
-~/.fernando-skills/scripts/install-to-agent.sh <agent>
+~/.dev-custom-skills/scripts/install-to-agent.sh <agent>
 ```
 
 `<agent>` puede ser `claude`, `cursor`, `codex` o `antigravity`. Ver [README.md](./README.md#installation) para detalles.
@@ -240,110 +240,20 @@ cd ~/tu-proyecto
 mkdir -p ~/.claude/skills
 cp -r skills/engineering/spec ~/.claude/skills/
 cp -r skills/engineering/spec-impl ~/.claude/skills/
+cp -r skills/engineering/manual-tecnico ~/.claude/skills/
 
 # O de proyecto (versionado en git)
 mkdir -p .claude/skills
 cp -r skills/engineering/spec .claude/skills/
 cp -r skills/engineering/spec-impl .claude/skills/
+cp -r skills/engineering/manual-tecnico .claude/skills/
 ```
 
-Para que el método funcione, también necesitas crear la carpeta `specs/` en la raíz del proyecto:
+Para el workflow de specs, también crea la carpeta `specs/` en la raíz del proyecto:
 
 ```bash
 mkdir specs
 ```
-
-Opcionalmente, añade un `specs/README.md` que documente la convención (ver el ejemplo en este repo).
-
----
-
-## Uso
-
-### Ciclo completo de una feature
-
-```bash
-# 1. Diseñar el spec con preguntas de clarificación
-/spec niveles-y-highscores
-
-# Claude lee el archivo de memoria del proyecto (CLAUDE.md, AGENTS.md, GEMINI.md o README.md) y specs/ existentes, hace preguntas
-# en bloques, desarrolla el spec sección por sección,
-# y al final lo guarda como specs/03-niveles-y-highscores.md
-# con estado: Borrador.
-
-# 2. Releer el spec fuera del chat y aprobarlo manualmente
-# (abrir el archivo en el editor, cambiar Estado: Borrador → Aprobado)
-
-# 3. Implementar el spec aprobado
-/spec-impl 03-niveles-y-highscores
-
-# Claude valida que el estado sea Aprobado, crea la rama
-# spec-03-niveles-y-highscores, se mueve a ella, muestra
-# el resumen del spec, y arranca la implementación
-# paso a paso con pausas para revisar diffs.
-```
-
-### Qué hace cada skill
-
-#### `/spec [tema-corto]`
-
-Diseña el documento de la feature. Pasa por cuatro fases:
-
-1. **Contexto** — lee el archivo de memoria del proyecto (`CLAUDE.md`, `AGENTS.md`, `GEMINI.md` o `README.md`, el primero que exista) y los specs previos.
-2. **Clarificación** — hace preguntas en bloques de 3-5 hasta que la feature está claramente definida.
-3. **Desarrollo sección por sección** — genera y confirma cada sección del spec antes de pasar a la siguiente.
-4. **Guardar** — escribe el archivo en `specs/NN-slug.md` con estado `Borrador`.
-
-#### `/spec-impl <NN-nombre>`
-
-Implementa un spec aprobado. Pasa por cuatro fases:
-
-1. **Identificar** — busca el archivo del spec.
-2. **Validar** — verifica que el estado sea `Aprobado`. Si no, se detiene.
-3. **Crear rama** — `git checkout -b spec-NN-slug` y se mueve a ella.
-4. **Implementar** — paso a paso con pausas, mostrando el resumen del spec primero.
-
-> **Control de la rama:** La Fase 3 lee el flag `AutoCreateBranch` de `specs/.spec-config.yml`. Por defecto es `true` (crea la rama automáticamente). Ponlo en `false` para que `/spec-impl` pregunte `[s/N]` antes de crear cualquier rama — útil si el nombrado de ramas es parte de tu propio Git workflow.
->
-> ```yaml
-> # specs/.spec-config.yml
-> AutoCreateBranch: false
-> ```
-
-### Estados de un spec
-
-| Estado         | Significado                                                              |
-| -------------- | ------------------------------------------------------------------------ |
-| `Borrador`     | El skill `/spec` lo generó pero el humano no lo ha releído.              |
-| `En revisión`  | El humano lo está revisando o iterando con Claude.                       |
-| `Aprobado`     | El humano lo leyó y autorizó. `/spec-impl` solo trabaja con este estado. |
-| `Implementado` | El código existe y pasa los criterios de aceptación.                     |
-| `Obsoleto`     | Reemplazado por otro spec. No se borra — se referencia.                  |
-
-**Cambiar el estado a `Aprobado` es un acto humano deliberado.** Es la única firma del contrato — Claude no puede aprobar su propio trabajo.
-
----
-
-## Por qué los dos skills funcionan como pareja
-
-```
-┌───────────────────────────────────────────────────────────┐
-│                                                           │
-│   /spec     Claude pregunta y diseña                      │
-│             ↓                                             │
-│             specs/NN-slug.md  (Estado: Borrador)          │
-│                                                           │
-│   ──────── humano relee y aprueba ────────                │
-│             ↓                                             │
-│             specs/NN-slug.md  (Estado: Aprobado)          │
-│                                                           │
-│   /spec-impl  Claude valida e implementa                  │
-│             ↓                                             │
-│             rama spec-NN-slug + código                    │
-│                                                           │
-└───────────────────────────────────────────────────────────┘
-```
-
-El gap entre los dos skills — releer y cambiar el estado a mano — es deliberado. Es el único momento donde **solo tú puedes hacer algo**. Sin ese gap, el método se degrada a "Claude escribe documentación bonita y luego escribe el código que se le ocurra de todos modos".
 
 ---
 
