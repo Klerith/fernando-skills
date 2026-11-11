@@ -3,7 +3,7 @@ name: spec-impl
 description: Implements an approved spec. Validates that the state means "Approved" (in any language), creates a git branch named after the spec, switches to it, and starts the implementation step by step with pauses to review diffs.
 disable-model-invocation: true
 argument-hint: <NN-spec-name>
-allowed-tools: Read, Glob, Grep, Edit, Write, AskUserQuestion, Bash(git status:*), Bash(git branch:*), Bash(git checkout:*), Bash(git log:*), Bash(git diff:*), Bash(git stash:*), Bash(cat:*), Bash(ls:*)
+allowed-tools: Read, Glob, Grep, Edit, Write, AskUserQuestion, Bash(git status:*), Bash(git branch:*), Bash(git checkout:*), Bash(git log:*), Bash(git diff:*), Bash(git stash:*), Bash(git add:*), Bash(git commit:*), Bash(git show:*), Bash(cat:*), Bash(ls:*)
 ---
 
 # /spec-impl — Implementer of approved specs
@@ -19,8 +19,8 @@ Current branch:
 Specs available in this folder:
 !`ls specs/ 2>/dev/null || echo "The specs/ folder does not exist"`
 
-Branch-creation config:
-!`cat specs/.spec-config.yml 2>/dev/null || echo "AutoCreateBranch: true (default, no config file)"`
+Workflow config:
+!`cat specs/.spec-config.yml 2>/dev/null || echo "No config file — defaults apply: AutoCreateBranch: true, AutoCommitSteps: false"`
 
 ---
 
@@ -119,7 +119,7 @@ Once you have confirmed the state means `Approved`:
    - `01-mvp-arkanoid.md` → branch `spec-01-mvp-arkanoid`
    - `02-powerups.md` → branch `spec-02-powerups`
 
-2. Read the `AutoCreateBranch` flag from the **Branch-creation config** shown in the session context above.
+2. Read the `AutoCreateBranch` flag from the **Workflow config** shown in the session context above.
 
    - If the config file does not exist, the value is missing, or the value is unrecognized → treat it as `true` (the default).
    - Only an explicit `false` (in any capitalization) disables automatic branch creation.
@@ -127,7 +127,7 @@ Once you have confirmed the state means `Approved`:
    **If `AutoCreateBranch` is `true` (default):** proceed without asking.
 
    - If the branch **does not exist**: create it with `git checkout -b spec-NN-slug`.
-   - If it **already exists**: this means previous work is being resumed. Switch to it, read `git log --oneline` on the branch, and tell the user which steps of the plan already look done and which step you propose to resume from. Wait for confirmation on the resume point before implementing anything.
+   - If it **already exists**: this means previous work is being resumed. Switch to it, read `git log --oneline` on the branch, and tell the user which steps of the plan already look done and which step you propose to resume from. Commits named `spec-NN-step-MM` (created when `AutoCommitSteps` is `true`) mark exactly which steps are finished. Wait for confirmation on the resume point before implementing anything.
    - In both cases: switch to the branch with `git checkout spec-NN-slug` and confirm the change was successful before continuing.
 
    **If `AutoCreateBranch` is `false`:** ask before touching git. Show:
@@ -167,6 +167,7 @@ After showing the spec summary, tell the user:
 ```
 I am going to implement the spec following the implementation plan exactly.
 I will pause after each step so you can review the diff.
+Each step will be committed as spec-NN-step-MM.   (← only if AutoCommitSteps is true)
 
 Shall we start with Step 1?
 ```
@@ -175,14 +176,23 @@ Wait for explicit confirmation ("yes", "go ahead", "go", or equivalent). Do not 
 
 Once confirmed, follow these rules during the entire implementation:
 
-**Never commit automatically.** Not per step, not at the end. You write the code and show the diff; committing is the user's decision and the user's command. Only commit if they explicitly ask you to.
+**Committing is controlled by the `AutoCommitSteps` flag** in the **Workflow config** shown in the session context above. If the config file does not exist, the value is missing, or the value is unrecognized → treat it as `false` (the default). Only an explicit `true` (in any capitalization) enables per-step commits.
+
+- **`AutoCommitSteps: false` (default) — never commit automatically.** Not per step, not at the end. You write the code and show the diff; committing is the user's decision and the user's command. Only commit if they explicitly ask you to.
+- **`AutoCommitSteps: true` — commit each step as soon as it is finished**, before pausing for review:
+  - Stage only the files you created, modified or deleted in this step: `git add -- <file> <file> …`. Never use `git add -A` or `git add .` — they could sweep in changes that do not belong to the step.
+  - Commit with the message `spec-NN-step-MM` and nothing else (no description, no body). `NN` is the spec number and `MM` is the step number from the implementation plan, both zero-padded to two digits. Example: step 3 of `01-mvp-arkanoid.md` → `spec-01-step-03`.
+  - If the user asks for adjustments to the step while reviewing it, apply them and fold them into the same commit (`git add -- <files>` + `git commit --amend --no-edit`), so each step stays a single commit. Only ever amend the commit of the step currently under review, never an earlier one.
+  - If the commit fails (e.g. a pre-commit hook rejects it), stop and show the error. Never bypass hooks with `--no-verify`.
+  - Never push.
 
 **One rule above all:** implement what the spec says. If something in the spec looks suboptimal to you, mention it as an observation but implement what was agreed. Changes to the spec go into the spec, not into the code by surprise.
 
 **Work rhythm:**
 
 - Implement one step of the plan.
-- Show a summary of which files you touched and what you did.
+- If `AutoCommitSteps` is `true`, commit the step as described above.
+- Show a summary of which files you touched and what you did. If you committed, add the commit line: `Committed as spec-NN-step-MM (<short hash>)` — the user can review it with `git show HEAD`.
 - Say: `Step N completed. Could you review the diff and let me know if I continue with Step N+1?`
 - Wait for confirmation before continuing.
 
@@ -233,3 +243,5 @@ in your repo's language) and make the final commit before merging this branch.
 ```
 
 **Branch creation is controlled by the `AutoCreateBranch` flag** in `specs/.spec-config.yml`. It defaults to `true` (create the branch automatically, as shown above). Set it to `false` to make Phase 3 ask `[y/N]` before creating the branch.
+
+**Per-step commits are controlled by the `AutoCommitSteps` flag** in the same file. It defaults to `false` (never commit). Set it to `true` to make Phase 4 commit each finished step as `spec-NN-step-MM`.

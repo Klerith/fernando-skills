@@ -313,10 +313,15 @@ Implements an approved spec. Goes through four phases:
 
 > **Branch control:** Phase 3 reads the `AutoCreateBranch` flag from `specs/.spec-config.yml`. It defaults to `true` (creates the branch automatically). Set it to `false` to make `/spec-impl` ask `[y/N]` before creating any branch — useful if branch naming is part of your own Git workflow.
 >
+> **Per-step commits:** Phase 4 reads the `AutoCommitSteps` flag from the same file. It defaults to `false` (`/spec-impl` never commits). Set it to `true` to have each finished step committed as `spec-NN-step-MM` (e.g. `spec-01-step-03`) — one commit per step, easy to review and revert. It never pushes.
+>
 > ```yaml
 > # specs/.spec-config.yml
 > AutoCreateBranch: false
+> AutoCommitSteps: true
 > ```
+>
+> If your `specs/.spec-config.yml` was created before `AutoCommitSteps` existed, add the line by hand — `/spec` never overwrites an existing config.
 
 ### Spec states
 

@@ -304,10 +304,15 @@ Implementa un spec aprobado. Pasa por cuatro fases:
 
 > **Control de la rama:** La Fase 3 lee el flag `AutoCreateBranch` de `specs/.spec-config.yml`. Por defecto es `true` (crea la rama automáticamente). Ponlo en `false` para que `/spec-impl` pregunte `[s/N]` antes de crear cualquier rama — útil si el nombrado de ramas es parte de tu propio Git workflow.
 >
+> **Commits por paso:** La Fase 4 lee el flag `AutoCommitSteps` del mismo archivo. Por defecto es `false` (`/spec-impl` nunca hace commits). Ponlo en `true` para que cada paso terminado se commitee como `spec-NN-step-MM` (p. ej. `spec-01-step-03`) — un commit por paso, fácil de revisar y revertir. Nunca hace push.
+>
 > ```yaml
 > # specs/.spec-config.yml
 > AutoCreateBranch: false
+> AutoCommitSteps: true
 > ```
+>
+> Si tu `specs/.spec-config.yml` se creó antes de que existiera `AutoCommitSteps`, añade la línea a mano — `/spec` nunca sobrescribe una config existente.
 
 ### Estados de un spec
 

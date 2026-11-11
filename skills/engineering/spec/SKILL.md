@@ -125,12 +125,17 @@ When the content is ready (either because you had everything, or because all sec
    #   true  (default) → /spec-impl creates and switches to spec-NN-slug without asking
    #   false           → /spec-impl asks for [y/N] confirmation before creating the branch
    AutoCreateBranch: true
+
+   # AutoCommitSteps — controls whether /spec-impl commits each finished step.
+   #   false (default) → /spec-impl never commits; committing is up to you
+   #   true            → /spec-impl commits each step as spec-NN-step-MM
+   AutoCommitSteps: false
    ```
 
 8. Confirm to the user:
    - Path of the created file.
    - Reminder: the spec is in `Draft` state. Change it to `Approved` once you have re-read it.
-   - If you just created `specs/.spec-config.yml`, mention it exists and that `AutoCreateBranch` defaults to `true` (set it to `false` to control branch creation yourself).
+   - If you just created `specs/.spec-config.yml`, mention it exists, that `AutoCreateBranch` defaults to `true` (set it to `false` to control branch creation yourself), and that `AutoCommitSteps` defaults to `false` (set it to `true` to have `/spec-impl` commit each step).
    - Next step: once reviewed and approved, run `/spec-impl NN-slug` to implement it.
    - **Stop here.** Do not propose implementing the spec, writing code, or taking any further action beyond this confirmation.
 

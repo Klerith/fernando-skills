@@ -35,7 +35,7 @@ This repo encodes a two-skill pair:
 
 Guides the user through 4 phases: read project context → clarify with questions (blocks of 3–5) → draft each spec section one at a time with user confirmation → save to `specs/NN-slug.md`.
 
-On save, it also seeds `specs/.spec-config.yml` (default `AutoCreateBranch: true`) **only if the file is missing** — an existing config is never overwritten. This is how the `AutoCreateBranch` flag that `/spec-impl` reads gets created without the user knowing the file exists.
+On save, it also seeds `specs/.spec-config.yml` (defaults `AutoCreateBranch: true`, `AutoCommitSteps: false`) **only if the file is missing** — an existing config is never overwritten. This is how the flags that `/spec-impl` reads get created without the user knowing the file exists.
 
 Output file format: `specs/NN-slug.md` with a header block:
 
@@ -59,9 +59,13 @@ Accepts `<NN-slug>` as argument. Phases:
 1. Locate `specs/<NN-slug>.md`.
 2. Read the status line — abort with a standard error message if it does not mean `Approved` in some language.
 3. Check the working tree is clean, then create and switch to branch `spec-NN-slug`. If the branch already exists, treat it as a resume and propose a starting step from `git log`.
-4. Implement the spec's plan step-by-step, pausing after each step for diff review. **It never commits** — that stays a human action.
+4. Implement the spec's plan step-by-step, pausing after each step for diff review. **By default it never commits** — that stays a human action — unless `AutoCommitSteps` is `true` (see below). It never pushes.
 
-Branch creation in step 3 is gated by the `AutoCreateBranch` flag, read at skill-load time from `specs/.spec-config.yml` via a `!`cat``snippet. Default (file or value absent) is`true`→ branch is created automatically. An explicit`false`makes the skill ask`[y/N]` before creating the branch; on decline it implements on the current branch. There is still no runtime config infra — the flag is just a value injected into the prompt and interpreted by the model.
+Branch creation in step 3 is gated by the `AutoCreateBranch` flag, read at skill-load time from `specs/.spec-config.yml` via a `!`cat``snippet. Default (file or value absent) is`true`→ branch is created automatically. An explicit`false`makes the skill ask`[y/N]` before creating the branch; on decline it implements on the current branch.
+
+Per-step commits in step 4 are gated by the `AutoCommitSteps` flag from the same file. Default (file or value absent) is `false` → never commits. An explicit `true` makes the skill commit each finished step, staging only that step's files, with the bare message `spec-NN-step-MM` (both numbers zero-padded); review adjustments are folded in with `--amend --no-edit`.
+
+There is still no runtime config infra — the flags are just values injected into the prompt and interpreted by the model.
 
 At completion, remind the user to verify acceptance criteria and mark the spec `Implementado` manually before merging.
 
